@@ -185,14 +185,13 @@ void Password::getmaster(){
 
     else{
         string a;
-        cout<<"file not opened properly\n";
         cout<<"Enter the master password:";
             getline(cin,a);
             master=a;
             fstream file1;
             file1.open("passwords.txt",ios::out);
             file1<<master<<"\n";
-            file1.close(); 
+            file1.close();
     }
     file.close();
 }
