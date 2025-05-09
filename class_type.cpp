@@ -38,19 +38,21 @@ class Password{
 
 void Password::encryption_master(){
     encrypt_master="";
+    string salt="objectorientedprogramming";
     for (int i = 0; i < master.length(); i++) {
-        char key_char = master[i % master.length()];
+        char key_char = salt[i % salt.length()];
         char encrypted_char = ((master[i] + key_char) % 256);  // Use full ASCII
-        encrypt_appname += encrypted_char;
+        encrypt_master += encrypted_char;
     }
 }
 
 void Password::decryption_master(){
     master="";
+    string salt="objectorientedprogramming";
     for(int i = 0; i < encrypt_master.length(); i++) {
-        char key_char = master[i % master.length()];
+        char key_char = salt[i % salt.length()];
          char decrypted_char = ((encrypt_master[i] - key_char + 256) % 256);
-         appname += decrypted_char;
+         master+= decrypted_char;
 }
 }
 
