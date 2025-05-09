@@ -31,7 +31,7 @@ class Password{
          void decrypt();
          void writedata();
          void readdata();
-         void getmaster();
+         int getmaster();
          void encryption_master();
          void decryption_master();
 };
@@ -178,8 +178,14 @@ void Password::readdata() {
     file.close();
 }
 
-void Password::getmaster(){
-   
+/*return 0 if masterpassword is enteed wrong...
+return 1 if master password is entered correctly
+return 2 if file is just now created*
+return 3 if file is not opened*/
+
+
+int Password::getmaster(){
+    int trigger=0;
     fstream file;
     file.open("passwords.txt",ios::in|ios::ate);
 
@@ -194,18 +200,30 @@ void Password::getmaster(){
             file1.open("passwords.txt",ios::out);
             if(file1.is_open()){
                 file1<<encrypt_master<<"\n";
-                file1.close(); 
+                file1.close();
+                return 2;
             }
             else{
+                return 3;
                 cout<<"file no opened\n";
             }
             
         }
         else{
+            string usermaster;
+            cout<<"Enter the master password(3):";
+            getline(cin,usermaster);
             file.seekg(0);
             getline(file,a);
             encrypt_master=a;
             decryption_master();
+            if(master==usermaster){
+                return 1;
+            }
+            else{
+                return 0;
+            }
+
            
         }
     }
@@ -220,8 +238,11 @@ void Password::getmaster(){
             file1.open("passwords.txt",ios::out);
             file1<<encrypt_master<<"\n";
             file1.close();
+            return 2;
     }
+    
     file.close();
+    return 3;
 }
 
 
