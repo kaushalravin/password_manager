@@ -16,6 +16,8 @@ class Password{
         encrypt_master;
     public:
         Password(){
+            master="";
+            encrypt_master="";
             username="";
             password="";
             appname="";
@@ -30,8 +32,27 @@ class Password{
          void writedata();
          void readdata();
          void getmaster();
+         void encryption_master();
+         void decryption_master();
 };
 
+void Password::encryption_master(){
+    encrypt_master="";
+    for (int i = 0; i < master.length(); i++) {
+        char key_char = master[i % master.length()];
+        char encrypted_char = ((master[i] + key_char) % 256);  // Use full ASCII
+        encrypt_appname += encrypted_char;
+    }
+}
+
+void Password::decryption_master(){
+    master="";
+    for(int i = 0; i < encrypt_master.length(); i++) {
+        char key_char = master[i % master.length()];
+         char decrypted_char = ((encrypt_master[i] - key_char + 256) % 256);
+         appname += decrypted_char;
+}
+}
 
 
 
@@ -80,8 +101,8 @@ void Password::decrypt() {
     username = "";
     password = "";
 
-    for (int i = 0; i < encrypt_appname.length(); i++) {
-        char key_char = master[i % master.length()];
+    for(int i = 0; i < encrypt_appname.length(); i++) {
+       char key_char = master[i % master.length()];
         char decrypted_char = ((encrypt_appname[i] - key_char + 256) % 256);
         appname += decrypted_char;
     }
@@ -118,6 +139,7 @@ void Password::readdata() {
     cout << "Enter the appname to search: ";
     string ap;
     getline(cin, ap);
+    
 
 
 
@@ -165,10 +187,11 @@ void Password::getmaster(){
             cout<<"Enter the master password:";
             getline(cin,a);
             master=a;
+            encryption_master();
             fstream file1;
             file1.open("passwords.txt",ios::out);
             if(file1.is_open()){
-                file1<<master<<"\n";
+                file1<<encrypt_master<<"\n";
                 file1.close(); 
             }
             else{
@@ -179,7 +202,9 @@ void Password::getmaster(){
         else{
             file.seekg(0);
             getline(file,a);
-            master=a;
+            encrypt_master=a;
+            decryption_master();
+           
         }
     }
 
@@ -188,9 +213,10 @@ void Password::getmaster(){
         cout<<"Enter the master password:";
             getline(cin,a);
             master=a;
+            encryption_master();
             fstream file1;
             file1.open("passwords.txt",ios::out);
-            file1<<master<<"\n";
+            file1<<encrypt_master<<"\n";
             file1.close();
     }
     file.close();
