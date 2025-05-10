@@ -34,7 +34,10 @@ class Password{
          void getmaster();
          void encryption_master();
          void decryption_master();
+         void delete_line();
+         void modify();
          string return_master();
+
 };
 
 string Password::return_master(){
@@ -235,5 +238,79 @@ void Password::getmaster(){
     file.close();
 
 }
+
+void Password::delete_line() {
+    cout << "Enter the appname to delete: ";
+    string ap;
+    getline(cin, ap);
+
+    ifstream file("passwords.txt");
+    ofstream temp("temp.txt");
+    if (!file.is_open() || !temp.is_open()) {
+        cout << "File error.\n";
+        return;
+    }
+
+    string line;
+    bool found = false;
+
+    // Copy the master password line first
+    if (getline(file, line)) {
+        temp << line << "\n";
+    }
+
+    // Process remaining entries
+    while (getline(file, line)) {
+        size_t pos1 = line.find('*');
+        size_t pos2 = line.find('*', pos1 + 1);
+
+        encrypt_appname = line.substr(0, pos1);
+        encrypt_username = line.substr(pos1 + 1, pos2 - pos1 - 1);
+        encrypt_password = line.substr(pos2 + 1);
+
+        decrypt();
+
+        if (appname == ap) {
+            found = true;
+            // Skip writing this line (i.e., delete it)
+            continue;
+        }
+
+        // Write all other lines back
+        temp << line << "\n";
+    }
+
+    file.close();
+    temp.close();
+
+    if (found) {
+        // Replace the old file
+        remove("passwords.txt");
+        rename("temp.txt", "passwords.txt");
+        cout << "Entry deleted successfully.\n";
+    } else {
+        cout << "Appname not found.\n";
+        remove("temp.txt");
+    }
+}
+
+void Password::modify()
+{
+
+    delete_line();
+    fstream file;
+    file.open("passwords.txt",ios::app);
+    cout<<"Enter the modified data:\n";
+    getdata();
+    writedata();
+
+}
+
+
+
+
+
+
+
 
 
