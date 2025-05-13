@@ -177,7 +177,6 @@ void Password::readdata() {
 
         if (appname == ap) {
             found = true;
-            putdata();
             break;
         }
     }
