@@ -1,6 +1,5 @@
 # password_manager
 
-Here's a detailed and professional **README description** for your password manager program. You can copy this into a `README.md` file for your project:
 
 ---
 
